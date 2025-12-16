@@ -96,7 +96,7 @@ Shellcodes: No Results
 we will use this exploit https://github.com/Muhammd/HP-Power-Manager/blob/master/hpm_exploit.py
 
 ```bash
-python2 ./exoloit2.py 192.168.176.45
+python2 ./exploit2.py 192.168.176.45
 
 C:\Users\Administrator\Desktop>type proof.txt         
 type proof.txt
