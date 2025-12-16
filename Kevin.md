@@ -73,7 +73,7 @@ Nmap done: 1 IP address (1 host up) scanned in 101.99 seconds
 
 
 
-![[Pasted image 20251216180929.png]]
+![BloodHound Analysis](images/kevin.png)
 
 
 
