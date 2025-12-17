@@ -25,7 +25,7 @@ Nmap done: 1 IP address (1 host up) scanned in 2.80 seconds
 
 The screenshot file "algernon.png" contains a web application login interface for "SmarterMail" which was accessed at the URL [http://192.168.141.65:9998/interface/root#/login](http://192.168.141.65:9998/interface/root#/login). This confirms that the web service on TCP port 9998 is a SmarterMail webmail server front-end. This provides a specific application to target for further reconnaissance, credential-based attacks, or potential exploitation of known vulnerabilities within the SmarterMail application.
 
-![[Pasted image 20251217205751.png]]
+![BloodHound Analysis](images/algernon.png)
 
 The command performed a non-interactive HTTP GET request to the root path of the web application on port 9998 and filtered the HTML response to extract the first ten lines containing script tags. The output reveals the application uses the Angular framework, as indicated by the referenced JavaScript files. The presence of version-specific filenames, "angular-v-100.0.6919.30414.8d65fc3f1d47d00.js" and others, provides a potential version identifier for the SmarterMail application, which can be cross-referenced with known vulnerabilities. This is useful for vulnerability research and fingerprinting the exact software version in use.
 
