@@ -33,21 +33,21 @@ The Nmap scan results indicate a Microsoft Windows host running several notable 
 
 This is a screenshot of the H2 Database Console login page. The interface shows saved connection settings for a "Generic H2 (Embedded)" instance. The pre-configured JDBC connection string is "jdbc:h2:mem:test", indicating an in-memory database. The default administrative username "sa" is populated with an empty password field. This presents a critical finding, as the H2 console is accessible without authentication and is configured with default credentials, allowing direct database access.
 
-![[Pasted image 20251217234111.png]]
+![BloodHound Analysis](images/jacko1.png)
 
 This screenshot displays the H2 Console help page, which contains a reference SQL script for creating a table, inserting data, and performing basic queries. The interface confirms full, interactive SQL command execution capability within the database. This demonstrates that an authenticated user has complete control over the database, enabling data extraction, modification, or deletion. The page also notes the ability to add additional JDBC drivers via environment variables, which could potentially be leveraged for further exploitation.
 
-![[Pasted image 20251217234207.png]]
+![BloodHound Analysis](images/jacko2.png)
 
 
 This screenshot is from the Exploit-DB entry for H2 Database version 1.4.199, detailing a JNI Code Execution vulnerability. The exploit is categorized as a local vulnerability requiring user interaction, likely involving the execution of Java Native Interface code through crafted SQL statements within the H2 console. This confirms the existence of a public exploit for the identified H2 database version, indicating a high-risk path to potential remote code execution on the underlying server if the console access is achieved.
 
 
-![[Pasted image 20251217234551.png]]
+![BloodHound Analysis](images/jacko3.png)
 
 This screenshot presents the full exploit code for the H2 Database JNI Code Execution vulnerability. The exploit uses SQL commands within the H2 console. It first writes a malicious native library DLL file to the disk using the CSVWRITE function. It then creates a Java alias to load this library and finally executes a shell command, demonstrated by calling "whoami". This confirms that by leveraging the unauthenticated H2 console access, an attacker can achieve arbitrary command execution on the underlying Windows host, elevating the finding to a critical severity.
 
-![[Pasted image 20251217234619.png]]
+![BloodHound Analysis](images/jacko4.png)
 
 A Windows x64 reverse TCP shell payload was generated using msfvenom. The payload was configured to connect back to the attacker's IP address, 192.168.45.155, on port 8082. The output format was set to a Windows executable file named "shell.exe". This executable is a malicious file created to establish a remote command shell connection from the compromised target host back to the attacker's machine.
 
