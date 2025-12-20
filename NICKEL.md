@@ -49,11 +49,14 @@ The service version detection scan results reveal the target is a Windows host n
 49669/tcp open  msrpc         Microsoft Windows RPC
 ```
 
+
+
+
+
+![BloodHound Analysis](images/nickel1.png)
+
+
 A manual review of the web application running on TCP port 33333 identified an interface titled "DevOps Dashboard." The page presents three distinct functionality links: "List Current Deployments," "List Running Processes," and "List Active Nodes." This dashboard suggests the presence of a backend system management or orchestration panel, which could be leveraged to execute commands or gather sensitive system information if proper access controls are not enforced.
-
-
-
-
 
 A test of the "List Current Deployments" functionality on the DevOps Dashboard returned an HTTP error stating "Cannot 'GET' /list-current-deployments". This indicates the endpoint likely expects a different HTTP method, such as POST, and is not directly accessible via a simple GET request. The error message is a standard default response, suggesting the underlying framework or application did not process the request as intended.
 
@@ -299,7 +302,8 @@ evince Infrastructure.pdf
 ```
 
 Analysis of the decrypted Infrastructure.pdf revealed several internal URLs and system names. Key discoveries include a temporary command endpoint at [http://nickel/](http://nickel/), a backup system at [http://nickel-backup/backup](http://nickel-backup/backup), and a Network Attached Storage device at [http://corp-nas/files](http://corp-nas/files). These endpoints represent potential targets for further internal enumeration and exploitation within the network environment.
-![[Pasted image 20251220193639.png]]
+
+![BloodHound Analysis](images/nickel2.png)
 
 Network connection analysis was performed. The netstat output confirms all previously discovered listening services and their associated Process IDs. Of particular note is the discovery of a service listening on the local loopback address 127.0.0.1 on TCP port 80, which was not previously detected by external scans. Additionally, an established outbound SSH connection from the target to the attacking host is visible, confirming the active session. The Process ID of 4 for several services, including the loopback port 80, indicates they are running under the System process.
 
