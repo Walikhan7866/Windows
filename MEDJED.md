@@ -120,16 +120,17 @@ The detailed Nmap scan results reveal several critical services and security mis
 The discovered file "medjed1.png" appears to be a screenshot or configuration page for a BarracudaDrive server's initial setup. It reveals an active setup interface requiring the creation of an administrator account with the username "wait" and an associated email address "wait@hi.email". This indicates the server is in an unconfigured or reset state, presenting a direct opportunity for privilege establishment. An attacker could potentially intercept this setup request or, if the setup is incomplete, claim the administrative account by submitting credentials through this interface, thereby gaining full control over the BarracudaDrive server and its integrated services.
 
 
-![[Pasted image 20251221001712.png]]
+
+![BloodHound Analysis](images/medjed1.png)
 
 The discovered file "medjed2.png" contains documentation for the BarracudaDrive Web File Server. It details access to a Web File Manager and WebDAV service, with specific mention of a directory path "/ad/" that possesses read and write permissions. This configuration explicitly confirms the earlier scan findings of an active WebDAV server with dangerous methods enabled. The exposed "/ad/" writable directory provides a direct vector for file upload and potential remote code execution. An attacker can leverage a WebDAV client or the web interface to upload malicious files to this location, which could then be executed by the server or accessed by other users, compromising the host.
 
-![[Pasted image 20251221001850.png]]
+![BloodHound Analysis](images/medjed2.png)
 
 The discovered file "medjed3.png" depicts a directory listing from a web server, likely corresponding to the BarracudaDrive service on port 8000. The listing shows an apparent root directory for a date-based path "192.168.184.127.2020/01/" and includes several user-created folder names such as "Mail Time", "Mail Tools", "English DB", "Google Hacking DB", and "Access The Event". The presence of these folders, along with entries like "RespeP WiFi Configur..." and a Slack URL, suggests the server is being actively used for storing operational data and potentially sensitive information. The empty file entries with timestamps from 1970 indicate placeholder or incomplete uploads. This finding confirms the Web File Manager is active and contains user data, reinforcing the critical risk posed by the writable WebDAV access.
 
 
-![[Pasted image 20251221001943.png]]
+![BloodHound Analysis](images/medjed3.png)
 
 The Gobuster directory enumeration was performed against the HTTP service on port 45332. The scan successfully identified an accessible `index.html` page and, most critically, a `phpinfo.php` file which returned a 200 status code. The presence of the `phpinfo.php` file is a significant information disclosure vulnerability, as it outputs extensive details about the PHP environment, including configuration settings, loaded modules, system paths, and potentially sensitive environment variables. This data can be leveraged by an attacker to refine further attacks against the application. Additionally, the scan revealed numerous access-denied resources, indicating the server has restrictive permissions in place, and a service-unavailable response for the `/examples` directory.
 
@@ -181,16 +182,16 @@ Finished
 
 The discovered file "medjed4.png" contains a direct excerpt from the output of the `phpinfo.php` page. This critical information disclosure confirms the server is running on a Windows 10 host named "MEDJED" using XAMPP with PHP version 7.3.23 and the Apache 2.0 handler. The disclosure includes the absolute path to the PHP configuration file at `C:\xamppp\php\php.ini`. The server path, thread safety being enabled, and the specific build compiler are now known. This information is invaluable for crafting targeted exploits, such as those involving Windows-specific paths or vulnerabilities in the stated PHP version and its associated modules.
 
-![[Pasted image 20251221002437.png]]
+![BloodHound Analysis](images/medjed4.png)
 
 The discovered file "medjed5.png" contains a continuation of the `phpinfo.php` output, revealing critical environment and server configuration details. It confirms the full web server stack as Apache/2.4.46 on Windows with OpenSSL/1.1.1g and PHP/7.3.23. The document root is exposed as `C:/xampp/htdocs`, and the script path for `phpinfo.php` is shown as `C:/xampp/htdocs/phpinfo.php`. Crucially, the environment variables expose the system root, the path to `cmd.exe` at `C:\WINDOWS\system32\cmd.exe`, and the executable extensions the system will recognize. The `SERVER_ADMIN` email and the `REMOTE_ADDR` of the probing machine are also visible. This level of detail provides an attacker with all necessary paths and system context to craft precise attacks, including potential command injection or path traversal, and confirms the use of a specific, potentially vulnerable, software stack.
 
-![[Pasted image 20251221002648.png]]
+![BloodHound Analysis](images/medjed5.png)
 
 
 The discovered file "medjed6.png" depicts a directory listing of the Apache document root at `C:/xampp/htdocs`, obtained via the Web File Manager or WebDAV access. The listing confirms the existence of the `phpinfo.php` file alongside the default `index.html`, `script.js`, and `styles.css`. The ability to browse and view this directory listing through the web interface validates the earlier findings of excessive write permissions on the WebDAV `/ad/` directory and demonstrates that an attacker has successfully enumerated the web root contents. This confirms the file upload vector is viable, as an attacker can now directly target this known path to upload a web shell or malicious script for remote code execution.
 
-![[Pasted image 20251221002911.png]]
+![BloodHound Analysis](images/medjed6.png)
 
 The command uses msfvenom to generate a Windows x64 reverse shell payload. The payload is configured to connect back to the attacker's machine at IP address 192.168.45.189 on TCP port 139. The output is saved as an executable file named "exploit.exe". This raw, unencoded payload is intended for direct execution on the target Windows host identified in prior reconnaissance. The selection of port 139 is strategic, as it is a common SMB port that may evade egress filtering. This payload creation is a preparatory step for exploitation, likely following the confirmed file upload capability via the WebDAV service.
 
@@ -206,12 +207,12 @@ Final size of exe file: 7168 bytes
 The discovered file "medjed7.png" is a screenshot of the BarracudaDrive Web File Manager interface. It shows an active file upload operation in progress. The interface is positioned at the path `C:/xampp/htdocs`, which is the web root directory previously enumerated. The user has selected a file named "exploit.exe" for upload. This action demonstrates the successful weaponization of the earlier discovered vulnerability. The attacker is uploading the generated reverse shell executable directly to the web server's document root, a location from which it can be accessed via HTTP and executed to establish a reverse connection back to the attacker's listening host.
 
 
-![[Pasted image 20251221003630.png]]
+![BloodHound Analysis](images/medjed7.png)
 
 
 The discovered file "medjed8.png" contains a command prompt window with the prompt `p@wmy@shall:*:`. This indicates a successful remote command execution and the establishment of a shell session on the target host. The prompt format suggests a custom or modified command-line interface, with "p@wmy" potentially representing a username and "shall" possibly indicating the hostname or a directory. The presence of this screenshot confirms that the uploaded "exploit.exe" reverse shell payload was successfully executed, providing the attacker with interactive command-line access to the compromised Windows system, thereby completing the initial exploitation phase and achieving a foothold on the target.
 
-![[Pasted image 20251221004345.png]]
+![BloodHound Analysis](images/medjed8.png)
 
 The command executes the hoaxshell tool, a PowerShell-based reverse shell handler, listening on the attacker's IP 192.168.45.189 and port 9999. The tool generates an obfuscated PowerShell one-liner payload designed to beacon back to the listener. This action represents a secondary, more sophisticated persistence mechanism being established on the compromised host. The lengthy Base64-encoded PowerShell command is the payload that would be executed on the target to create a new session, likely to bypass detection or maintain access independently of the initial "exploit.exe" reverse shell. This indicates the attacker is escalating their presence by deploying a additional backdoor.
 
