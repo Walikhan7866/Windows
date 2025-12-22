@@ -37,7 +37,7 @@ The Nmap service enumeration results reveal a Windows host running multiple serv
 The discovered file billyboss1.png references the service index http://192.168.160.61/v3/index.json. This indicates the BaGet service on port 80 is configured as a NuGet package repository with API endpoints for package management. The documentation details the push command syntax for uploading packages. This functionality represents a potential attack vector for uploading malicious NuGet packages if authentication or authorization controls on the BaGet instance are weak or misconfigured, which could lead to remote code execution on the server.
 
 
-![[Pasted image 20251222195910.png]]
+![BloodHound Analysis](images/billyboss1.png)
 
 
 
@@ -45,7 +45,7 @@ The discovered file billyboss1.png references the service index http://192.168.1
 The file `billyboss2.png` is a screenshot of the login portal for the Nexus Repository Manager located on port 8081. The interface confirms the software version as "OSS 3.21.0-05". This identifies a specific, authenticated administrative interface for the artifact repository. The presence of a login page establishes a requirement for credentials to access privileged functionality. This makes it a primary target for credential-based attacks, including brute-forcing or the exploitation of default credentials, to gain control over the repository for potential software supply chain attacks or further host compromise.
 
 
-![[Pasted image 20251222195929.png]]
+![BloodHound Analysis](images/billyboss2.png)
 
 
 The command `cewl --lowercase http://192.168.188.61:8081/ | grep -v CeWL > wordlists.txt` was executed. This uses the CeWL web crawler to spider the Nexus Repository Manager web application on port 8081. The `--lowercase` argument normalizes all parsed words. The output is piped to filter out lines containing the tool's signature, and the result is saved to a file named `wordlists.txt`. The purpose is to generate a custom wordlist by extracting unique words from the target's web pages. This site-specific wordlist is intended for use in subsequent password attacks against the Nexus login portal, increasing the likelihood of success by using vocabulary relevant to the application.
