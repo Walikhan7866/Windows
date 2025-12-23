@@ -184,15 +184,15 @@ Finished
 
 The downloaded file `shenzi1.png`, despite its `.png` extension, contains plain text data. The content is identified as a WordPress administration dashboard welcome page. This indicates that a WordPress instance is installed and accessible on the target. The presence of this data within a file on an openly accessible SMB share suggests it may be a saved or cached administrative page, potentially containing sensitive information about the site's structure and status. This file corroborates the earlier discovery of WordPress credentials in `passwords.txt` and confirms WordPress as a primary application for further targeted testing.
 
-![[Pasted image 20251222231318.png]]
+![BloodHound Analysis](images/shenzi1.png)
 
 The file `shenzi2.png` contains further text-based data from what appears to be a WordPress administration panel. The content includes references to page management, installed plugins, user tools, and settings. Notably, it mentions plugin names and potential administrative actions such as "Activate," "Deactivate," and "Delete." The data presents a partial view of the site's backend structure and plugin ecosystem. This information, again stored in a publicly accessible SMB share, aids in understanding the WordPress installation's configuration and may hint at specific plugins that could be targeted for known vulnerabilities during subsequent penetration testing phases.
 
-![[Pasted image 20251222232905.png]]
+![BloodHound Analysis](images/shenzi2.png)
 
 The file `shenzi3.png` contains only the string `# p@wmup@shallow!!`. This appears to be a simple text string or a potential password fragment. Unlike the previous PNG files which contained structured application data, this file's purpose is less clear. It could be a placeholder, a note, or a weak password attempt. Its value is minimal compared to the credential disclosure in `passwords.txt`, but it is documented as a found artifact.
 
-![[Pasted image 20251222232934.png]]
+![BloodHound Analysis](images/shenzi3.png)
 
 The hoaxshell.py script was executed to generate a PowerShell reverse shell payload. The command establishes a listener on the attacking machine at IP 192.168.45.193 and port 9999. The lengthy base64-encoded string output is the PowerShell one-liner payload. This payload, when executed on the target Windows host, will create a callback connection to the attacker's listener, establishing a remote shell session. The payload uses HTTP requests for command-and-control communication, embedding commands and responses in the headers and body of web requests to potentially evade basic network detection. The generation of this payload is the preparatory step for attempting remote code execution.
 
@@ -220,7 +220,7 @@ henzi@shenzi:C:\xampp\htdocs\shenzi\wp-content\uploads\2025\12# powershell -e JA
 
 The file `shenzi4.png` contains the output of a local privilege escalation check. The content confirms that the `AlwaysInstallElevated` registry key is enabled in both the HKLM (HKEY_LOCAL_MACHINE) and HKCU (HKEY_CURRENT_USER) hives. This is a critical misconfiguration. When these keys are set to 1, any user can install Windows Installer packages (.msi files) with SYSTEM-level privileges. This vulnerability allows for straightforward privilege escalation from the current user context to NT AUTHORITY\SYSTEM by creating and executing a malicious MSI package.
 
-![[Pasted image 20251222233531.png]]
+![BloodHound Analysis](images/shenzi4.png)
 
 The msfvenom command was used to generate a malicious Windows Installer package (MSI) for privilege escalation. The payload `windows/shell_reverse_tcp` was configured to connect back to the attacker's IP 192.168.45.193 on port 21. The output format was specified as MSI (`-f msi`), and the file was saved as `priv.msi`. This 159,744-byte file contains a raw, unencoded reverse shell payload targeting the x86 architecture. This MSI file is designed to be executed on the target host to exploit the previously identified `AlwaysInstallElevated` vulnerability, where its installation will run with SYSTEM privileges, thereby granting a reverse shell with the highest level of access.
 
