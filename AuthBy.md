@@ -58,7 +58,7 @@ Nmap done: 1 IP address (1 host up) scanned in 138.99 seconds
 
 Analysis of the captured service banner and the provided screenshot for port 242 confirms the presence of an HTTP Basic Authentication prompt on the Apache web server. The realm "Qui e nuce nuculeum esse volt, frangit nucem!" is displayed, which serves as the authentication gateway. This mechanism requires valid credentials to proceed and will be targeted for brute-force or credential stuffing attacks to gain unauthorized access to the web application's protected resources.
 
-![[Pasted image 20251224023814.png]]
+![BloodHound Analysis](images/authby1.png)
 
 Anonymous FTP access was successfully established with the target server running zFTPServer 6.0. The connection permitted full navigation of the remote file system. The 'accounts' directory was accessed and contained several user account configuration files with the '.uac' extension, including files for 'Offsec', 'anonymous', and 'admin'. A backup subdirectory was also discovered containing archived copies of these account files. These files were retrieved for offline analysis to extract potential credentials or authentication data that could be leveraged to compromise other services on the host, such as the web authentication on port 242 or the FTP admin interface on port 3145.
 
@@ -207,7 +207,7 @@ ftp> exit
 
 The captured screenshot shows the successful execution of the uploaded `shell.php` web shell, accessible via the web server on port 242. The shell interface is displayed in the browser, confirming remote code execution. The shell output shows the current directory as `C:\wmy\www` and the user context as `apache@LT004`, indicating the web server is running with the privileges of the 'apache' user on a host named 'LT004'. This provides a command execution foothold on the target Windows system.
 
-![[Pasted image 20251224025407.png]]
+![BloodHound Analysis](images/authby2.png)
 
 The `systeminfo` command was executed via the established web shell, yielding detailed system information. The target is confirmed to be a 32-bit (`X86-based`) Windows Server 2008 Standard Edition, Service Pack 1, build 6001, hosted on a VMware virtual platform. The hostname is `LIVDA`. This information is critical for identifying relevant vulnerabilities, exploits, and privilege escalation paths specific to this legacy operating system and its configuration.
 
