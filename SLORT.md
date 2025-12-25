@@ -86,7 +86,7 @@ Progress: 4614 / 4615 (99.98%)
 
 Analysis of the file "slort.png" reveals its actual content is a PHP error message, not image data. The error indicates the server attempted to include a file named "random" using the `include()` function on line 4 of `C:\xampp\htdocs\site\index.php`. This demonstrates a Local File Inclusion vulnerability where user-controlled input is passed unsanitized to the `include` function.
 
-![[Pasted image 20251225032922.png]]
+![BloodHound Analysis](images/slort.png)
 
 The command generates a PHP reverse shell payload using msfvenom. The payload is configured to connect back to the attacker's machine at IP address 192.168.45.193 on port 21. The output is saved in raw format to a file named phpreverseshell.php, creating a 2990-byte malicious script for remote code execution.
 
