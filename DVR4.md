@@ -54,15 +54,16 @@ The Nmap scan results indicate a Windows host running several services. Port 22 
 
 The provided file appears to be a screenshot analysis or note of the web interface found on port 8080. It confirms the service as the "Argus Surveillance DVR" application. The interface presents administrative panels for managing cameras, records, users, and program options. The note "There are no cameras. To create a camera click here" suggests the system may be in a default or unconfigured state. This administrative interface is a primary target for authentication bypass, default credential testing, and exploitation of known vulnerabilities in the Argus DVR software.
 
-![[Pasted image 20251226093727.png]]
+
+![BloodHound Analysis](images/dvr1.png)
 
 The image captures the user management section of the Argus Surveillance DVR web application. It shows a user table with a default "Administrator" account and options to change its password. The interface allows the creation of new users with configurable permissions packages. The copyright notice dates the software between 2000-2008, indicating it is likely outdated and contains unpatched vulnerabilities. The presence of an administrative interface with password change functionality is a direct target for credential-based attacks, including brute-forcing the default administrator password.
 
-![[Pasted image 20251226093811.png]]
+![BloodHound Analysis](images/dvr2.png)
 
 This image displays the "About" information for the Argus Surveillance DVR software, confirming it is version 4.0 released on December 18, 2008, and is currently unregistered. This specific version and release date are critical for vulnerability research, as they allow for the precise identification of known, exploitable security flaws in this outdated and unlicensed application.
 
-![[Pasted image 20251226093937.png]]
+![BloodHound Analysis](images/dvr3.png)
 
 The provided command is a proof-of-concept exploit targeting a directory traversal vulnerability in the Argus Surveillance DVR web interface. The curl request manipulates the `RESULTPAGE` parameter to traverse out of the web directory and attempts to read the private SSH key file located at `/Users/Viewer/.ssh/id_rsa` on the Windows host. This demonstrates a critical information disclosure flaw that could lead to the compromise of the SSH service on port 22.
 
