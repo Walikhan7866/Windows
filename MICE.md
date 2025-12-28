@@ -188,29 +188,29 @@ xfreerdp /v:192.168.241.199 /u:divine /p:ControlFreak11 /f
 
 The file 'mice1.png' contains a text snippet resembling a Windows command prompt session. The output indicates a command error and displays partial directory paths, including 'C:\Users\Alc\Innovations' and 'C:\Users\Alc\Innovations1'. A string 'request-pv3d1f0106' is present, which may be a hostname, username, or identifier. The content appears to be a screenshot or copy of a command-line interaction, possibly from a different user session or system, and may contain useful contextual information for further enumeration.
 
-![[Pasted image 20251228012254.png]]
+![BloodHound Analysis](images/mice1.png)
 
 The file 'mice2.png' contains documentation for CVE-2021-35448, a local privilege escalation vulnerability in Remote Mouse version 3.008. The exploit leverages a folder path selection dialog to spawn a command prompt with Administrator privileges by navigating to 'C:\Windows\System32\cmd.exe'. This vulnerability provides a direct path from a standard user session to SYSTEM-level access on the compromised host where the vulnerable software is installed and accessible.
 
-![[Pasted image 20251228012314.png]]
+![BloodHound Analysis](images/mice2.png)
 
 The file 'mice3.png' contains apparent desktop interface elements and notes. Key references include a directory path 'C:\Users\Desktop\AppData', which is a non-standard and likely erroneous path. Text snippets such as "Ctrl+Shift" and "Type here to search" suggest it captures parts of a graphical user interface. The strings "4/7 Wrwd", "5/2/24", and "4/20/020" may be dates or codes. The content appears to be a fragment of a screenshot showing a desktop or file explorer window, potentially containing environment clues.
 
-![[Pasted image 20251228012334.png]]
+![BloodHound Analysis](images/mice3.png)
 
 
 The file 'mice4.png' appears to contain a configuration interface for a remote access or mouse application, potentially "Remote Advocat" or a similar tool. The interface includes options for program behavior on Windows startup, failure notifications, and connection methods. A critical section titled "Password for Connection" is present, indicating the software may use a static or custom password for incoming connections. The "Image Transfer Folder" setting has a "Change" button, which is the actionable component exploited in CVE-2021-35448 for privilege escalation by navigating to a system binary.
 
-![[Pasted image 20251228012351.png]]
+![BloodHound Analysis](images/mice4.png)
 
 The file 'mice5.png' depicts the "Save As" dialog from the Remote Mouse application, precisely as described in the CVE-2021-35448 exploit. The dialog shows the address bar navigated to 'C:\Windows\System32\cmd.exe'. The interface elements confirm the exploit's feasibility, where clicking "Save" or similar within this dialog while targeting a system executable will spawn that process with elevated privileges. This is the visual confirmation of the privilege escalation vector being actively leveraged.
 
 
-![[Pasted image 20251228012416.png]]
+![BloodHound Analysis](images/mice5.png)
 
 The file 'mice6.png' displays a Windows command prompt with an elevated title bar stating "Administrator: C:\Windows\System32\cmd.exe". The session output shows the command 'whoami' was executed, returning 'nt authority\system'. This confirms the successful local privilege escalation to SYSTEM-level access on the compromised host. The user context 'C:\Users\dlyline>' appears to be a visual artifact or username display error, but the 'nt authority\system' result is definitive proof of the highest privilege attainment.
 
-![[Pasted image 20251228012437.png]]
+![BloodHound Analysis](images/mice6.png)
 
 
 The final SYSTEM-level command shell accessed the Administrator's Desktop directory. The proof.txt file was read, revealing its contents as the string 0265bdf3e4e9a4b1699c45435c1ef96c. This string is the administrative or root flag, confirming the successful completion of the penetration test with full system compromise and privilege escalation to the highest level on the target host.
