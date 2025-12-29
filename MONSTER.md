@@ -106,7 +106,7 @@ Finished
 
 A review of the extracted file content from the discovered image, "monster1.png", was conducted. The content reveals a browser error message indicating a failed connection attempt to the hostname "[monster.pg](https://monster.pg/)". This suggests the target system may be configured with a virtual host or rely on host header resolution for the primary web application. The error message, which mimics a standard Firefox network error page, indicates that accessing the server via its IP address alone may not serve the intended content. This discovery points to the need for further enumeration using the identified hostname, "[monster.pg](https://monster.pg/)", potentially by adding it to the local hosts file and rescanning, or by utilizing virtual host brute-forcing techniques to uncover additional web applications.
 
-![[Pasted image 20251229170610.png]]
+![BloodHound Analysis](images/monster1.png)
 
 The local host file was examined and found to contain a manual entry mapping the target IP address, 192.168.229.180, to the hostname "[monster.pg](https://monster.pg/)". This configuration confirms the earlier hypothesis derived from the discovered file. This entry is crucial for proper interaction with the target's web services, as it ensures HTTP requests sent to the hostname "[monster.pg](https://monster.pg/)" will be correctly routed to the target machine. This discovery indicates the assessment environment was pre-configured to resolve this hostname, and subsequent testing of the web application must be conducted using this hostname to access the intended virtual host and avoid connection errors.
 
@@ -117,7 +117,7 @@ sudo cat /etc/hosts
 
 A second image file, "monster2.png", was analyzed, revealing critical application intelligence. The content discloses the presence of "Mike's Blog", a web application powered by Monstra CMS version 3.0.4. Two valid usernames were enumerated: "admin" and "mike". This information directly identifies the specific content management system and its exact version, enabling targeted research for known vulnerabilities and exploits associated with Monstra 3.0.4. The user list provides a concrete target for authentication-based attacks, such as password brute-forcing or credential stuffing. The term "Sitemap" may also indicate an accessible site structure file for further content discovery. This finding pivots the assessment focus to the Monstra application and its known security issues.
 
-![[Pasted image 20251229170651.png]]
+![BloodHound Analysis](images/monster2.png)
 
 A searchsploit query was executed for the Monstra CMS. The results confirm multiple documented vulnerabilities for the identified version 3.0.4. Of significant note are several exploits indicating authenticated arbitrary file upload leading to remote code execution, including Python scripts numbered 49949.py and 52038.py. Additional vulnerabilities include stored and persistent cross-site scripting, SQL injection in prior versions, arbitrary folder deletion, and cross-site request forgery for account hijacking. This catalog provides a direct path for exploitation, with the highest priority being the authenticated RCE vectors, provided valid credentials for the previously enumerated "admin" or "mike" accounts can be obtained. The presence of these documented exploits significantly elevates the risk associated with the discovered Monstra instance.
 
@@ -200,7 +200,7 @@ PS C:\xampp\htdocs\blog\public\themes\default >
 The third image file, "monster3.png", was examined. Its content appears to contain a fragment of obfuscated code, specifically what seems to be a portion of a Base64-encoded PowerShell command. The string "IAKAAkAGUAKwAkaHIAKoAgAcOaagBvAGkAbgAgACcAiaAnACAfaAgAHMabABuAGuaCAgaDAALgA4AH0A" resembles the tail end of the previously generated hoaxshell payload. The presence of the "[Execute]" label suggests this image was used as a mechanism to store or transfer the payload, likely to be copied and executed via the established web shell to initiate the reverse shell connection. This indicates the attacker utilized steganography or simple data hiding within image files to stage payloads on the compromised system.
 
 
-![[Pasted image 20251229172449.png]]
+![BloodHound Analysis](images/monster3.png)
 
 The local.txt flag was retrieved from the user Mike's desktop directory. The command `type local.txt` was executed in the obtained reverse shell session, successfully outputting the flag's contents: `f3d958ba32efa0d1dbc3bf0bf38fa97d`. This action confirms the attacker has successfully navigated the filesystem to a user directory and possesses read access to user-level files, demonstrating a successful privilege escalation or lateral movement to the context of the user 'Mike'. The retrieval of this flag is a common objective in penetration testing, signifying the compromise of the user account.
 
