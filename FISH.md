@@ -130,11 +130,11 @@ PORT      STATE SERVICE              VERSION
 
 The provided file appears to be a screenshot of a login page for a GlassFish Server administration console. It indicates that "Secure Admin must be enabled to access the DAS remotely," suggesting the remote administration interface is currently locked due to a security configuration, which may prevent direct login attempts through this web interface.
 
-![[Pasted image 20251230161949.png]]
+![BloodHound Analysis](images/fish1.png)
 
 The provided file is a screenshot of a login page for SynaMan version 5.1, a file management application by Synametrics Technologies. This indicates the presence of a web-based file management interface that requires authentication.
 
-![[Pasted image 20251230162013.png]]
+![BloodHound Analysis](images/fish2.png)
 
 The Searchsploit query for Oracle GlassFish 4.1 identified multiple public exploits, specifically path traversal vulnerabilities, indicating this version of the application server is vulnerable to arbitrary file read attacks. Metasploit modules are available for both Linux and Windows platforms.
 
@@ -252,7 +252,7 @@ Saved as: pwned.exe
 
 The screenshot shows the attacker's command execution on the compromised host. The attacker used PowerShell to download the malicious `pwned.exe` reverse shell from the attacking machine and subsequently executed it, triggering the payload to establish a reverse shell connection.
 
-![[Pasted image 20251230164401.png]]
+![BloodHound Analysis](images/fish3.png)
 
 The attacker has read the contents of the `local.txt` proof file located on the user's desktop. The retrieved hash `b908b20b6eea5b7b71b49be0d44c257f` serves as evidence of successful local user compromise and access to the filesystem.
 
